@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MillTrack — Rice Mill Operations and Transaction Tracking</title>
+  <meta name="description" content="Web-Based Rice Mill Operations and Transaction Tracking System with SMS Notification Upon Milling Completion">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============ CUSTOMER LOGIN  (index.html#login) ============ -->
+  <section id="page-login" hidden>
+    <div class="auth">
+      <div class="auth-brand">
+        <div class="logo"><span class="logo-mark"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3.5 3.5 3.5 8.5 0 12-3.5-3.5-3.5-8.5 0-12zM12 21v-9M7 13c0 3 2 5 5 5M17 13c0 3-2 5-5 5"/></svg></span>MillTrack</div>
+        <div>
+          <h1>Know exactly when your rice is <em>ready</em>.</h1>
+          <p class="lead">Request milling, follow your number in line, and see your fees and payment status without waiting at the mill.</p>
+          <ul class="feats">
+            <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Choose drop-off, pickup or delivery and your preferred time.</span></li>
+            <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>See your number in line and estimated completion time.</span></li>
+            <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Pay by GCash or cash on delivery (COD).</span></li>
+          </ul>
+        </div>
+        <div class="auth-loc"><b data-mill="name"></b><span data-mill="address" data-empty="Location not set yet"></span></div>
+      </div>
+      <div class="auth-form">
+        <form class="auth-card" id="loginForm" novalidate>
+          <span class="pill">Customer login</span>
+          <h2>Welcome back</h2>
+          <p>Sign in with your mobile number.</p>
+          <label class="field"><span>Mobile number</span><input type="tel" name="mobile" required placeholder="0917 123 4567" autocomplete="tel"></label>
+          <label class="field"><span>Password</span><input type="password" name="password" required autocomplete="current-password"></label>
+          <div class="form-err"></div>
+          <button class="btn primary block">Sign in</button>
+          <div class="switch">New customer? <a href="#register">Create an account</a></div>
+          <div class="switch staff">Rice mill staff? <a href="#admin-login">Go to admin login</a></div>
+          <p class="demo-hint">Demo customer: 0917 123 4567 · customer123</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CUSTOMER REGISTRATION  (index.html#register) ============ -->
+  <section id="page-register" hidden>
+    <div class="auth">
+      <div class="auth-brand">
+        <div class="logo"><span class="logo-mark"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3.5 3.5 3.5 8.5 0 12-3.5-3.5-3.5-8.5 0-12zM12 21v-9M7 13c0 3 2 5 5 5M17 13c0 3-2 5-5 5"/></svg></span>MillTrack</div>
+        <div>
+          <h1>Register once. Track <em>every sack</em>.</h1>
+          <p class="lead">Create your customer account to request milling online and follow each transaction from the queue to completion.</p>
+          <ol class="how">
+            <li><b>Register</b><span>Your mobile number is checked for format and duplicates, then confirmed by the mill.</span></li>
+            <li><b>Request milling</b><span>Choose drop-off or pickup, your schedule, and GCash or COD.</span></li>
+            <li><b>Watch your number in line</b><span>Your dashboard shows your place in the queue and when your rice will be ready.</span></li>
+          </ol>
+        </div>
+        <div class="auth-loc"><b data-mill="name"></b><span data-mill="address" data-empty="Location not set yet"></span></div>
+      </div>
+      <div class="auth-form">
+        <form class="auth-card" id="registerForm" novalidate>
+          <h2>Create your account</h2>
+          <p>It takes less than a minute.</p>
+          <label class="field"><span>Full name</span><input type="text" name="name" required autocomplete="name"></label>
+          <label class="field"><span>Mobile number</span><input type="tel" name="mobile" required placeholder="0917 123 4567" autocomplete="tel"><small>The mill confirms this number before using it for notifications.</small></label>
+          <label class="field"><span>Address</span><input type="text" name="address" placeholder="Purok / Barangay / Town"><small>Needed if you want pickup or delivery.</small></label>
+          <label class="field"><span>Password</span><input type="password" name="password" required autocomplete="new-password"><small>At least 6 characters.</small></label>
+          <div class="form-err"></div>
+          <button class="btn primary block">Create account</button>
+          <div class="switch">Already registered? <a href="#login">Sign in</a></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ADMIN LOGIN  (index.html#admin-login) ============ -->
+  <section id="page-admin-login" hidden>
+    <main class="admin-wrap">
+      <div class="logo"><span class="logo-mark"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3.5 3.5 3.5 8.5 0 12-3.5-3.5-3.5-8.5 0-12zM12 21v-9M7 13c0 3 2 5 5 5M17 13c0 3-2 5-5 5"/></svg></span>MillTrack</div>
+      <form class="admin-card" id="adminLoginForm" novalidate>
+        <span class="pill">Admin and staff only</span>
+        <h1>Mill administration</h1>
+        <p class="sub"><span data-mill="name"></span> · queue, schedules, customers and payments.</p>
+        <label class="field"><span>Staff mobile number</span><input type="tel" name="mobile" required placeholder="0917 000 0001" autocomplete="username"></label>
+        <label class="field"><span>Password</span><input type="password" name="password" required autocomplete="current-password"></label>
+        <div class="form-err"></div>
+        <button class="btn gold block">Sign in to admin</button>
+        <p class="demo-hint">Demo admin: 0917 000 0001 · admin123</p>
+      </form>
+      <p class="back">Are you a customer? <a href="#login">Go to customer login</a></p>
+    </main>
+  </section>
+
+  <!-- ============ SIGNED-IN SCREENS ============
+       The sidebar and every dashboard screen are drawn here by script.js -->
+  <div id="app" hidden></div>
+
+  <div id="toasts" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
