@@ -554,9 +554,32 @@ const localApi = (() => {
   };
 })();
 
-// Every page calls api(...). In the finished system this sends the request to the server.
+// SHARED MODE: when the page is opened through the MillTrack server (http://localhost:3000/60/ or the
+// online link), every request goes to that server, so customers and the Admin on different devices see
+// the same records. When index.html is opened directly as a file, the browser-only store above is used.
+let SERVER = null;
+async function detectServer() {
+  if (SERVER !== null) return SERVER;
+  if (!location.protocol.startsWith('http')) return (SERVER = false);
+  try {
+    const r = await fetch('/api/bootstrap', { credentials: 'same-origin' });
+    const j = await r.json();
+    SERVER = r.ok && !!j.mill;
+  } catch { SERVER = false; }
+  return SERVER;
+}
+// Every screen calls api(...) to read or save records.
 async function api(path, method = 'GET', body) {
-  return localApi(path, method, body);
+  if (!(await detectServer())) return localApi(path, method, body);
+  const res = await fetch(path, {
+    method, credentials: 'same-origin',
+    headers: method === 'GET' ? {} : { 'Content-Type': 'application/json' },
+    body: method === 'GET' ? undefined : JSON.stringify(body || {}),
+  });
+  let data = {};
+  try { data = await res.json(); } catch { /* empty reply */ }
+  if (!res.ok) throw new Error(data.error || 'Request failed. Please try again.');
+  return data;
 }
 
 /* =====================================================================================
@@ -616,6 +639,7 @@ function ensureShell() {
     app.innerHTML = `<div class="shell" data-uid="${esc(uid)}">
       <aside class="side">${logo()}<div class="mill">${esc(S.mill.name)}${S.mill.address ? `<br>${esc(S.mill.address)}` : ''}</div>
         <nav class="nav">${nav.map(([r, l, i, soon]) => `<a href="#${r}" data-r="${r}">${ic(i)}${l}${soon ? '<span class="soon">Soon</span>' : ''}</a>`).join('')}</nav>
+        <div class="mode ${SERVER ? 'shared' : ''}">${SERVER ? '<b>Shared mode</b>Customers and Admin on any device see the same records.' : '<b>This browser only</b>Records are saved in this browser. Open through the MillTrack server to share them between devices.'}</div>
         <div class="side-user"><span class="avatar">${esc(S.user.name[0].toUpperCase())}</span>
           <div><b>${esc(S.user.name)}</b><small>${isAdmin() ? 'Admin' : 'Customer'}</small></div>
           <button data-act="logout" title="Sign out" aria-label="Sign out">${ic('out')}</button></div>
@@ -707,8 +731,8 @@ async function viewSettings() {
         ${field({ name: 'minutes_per_sack', label: 'Average milling minutes per sack', type: 'number', value: s.minutes_per_sack, attrs: 'min="1" step="1"', hint: 'Used to estimate completion times in the queue.' })}
         <div class="form-err"></div><button class="btn primary">Save</button></form>
       <div class="stack">${locationCard()}
-        <div class="card"><h3>Demo data</h3><p class="muted">This 60% build keeps its records in this browser. Reset to start the presentation with fresh sample data.</p>
-          <div class="btns" style="margin-top:12px"><button class="btn danger" data-act="resetdemo">Reset demo data</button></div></div></div>
+        ${SERVER ? '<div class="card"><h3>Shared mode</h3><p class="muted">Records are kept on the MillTrack server, so every device sees the same data.</p></div>' : `<div class="card"><h3>Demo data</h3><p class="muted">Records are kept in this browser only. Reset to start the presentation with fresh sample data.</p>
+          <div class="btns" style="margin-top:12px"><button class="btn danger" data-act="resetdemo">Reset demo data</button></div></div>`}</div>
     </div>
     <div class="card flush"><div class="card-head"><h3>Services and fees</h3><span class="muted">Editing fees is part of the remaining work</span></div>${table([
       { h: 'Service', f: (x) => `<b>${esc(x.name)}</b>` }, { h: 'Applies', f: (x) => KIND[x.kind] }, { h: 'Rate', r: 1, f: (x) => `${peso(x.rate)} ${x.unit === 'sack' ? '/ sack' : 'flat'}` },
