@@ -288,3 +288,7 @@ body.admin-login { background: radial-gradient(900px 500px at 50% -10%, #1d5a3e 
 .soon-card ul { margin: 8px 0 0; padding-left: 20px; display: grid; gap: 6px; }
 .demo-hint { margin-top: 16px; font-size: 12.5px; color: var(--muted); text-align: center; }
 body.admin-login .demo-hint { color: #7f9a8c; }
+.side .mode { font-size: 12px; line-height: 1.45; color: #84a091; border: 1px dashed rgba(255, 255, 255, .16); border-radius: 10px; padding: 9px 11px; margin: 0 4px; }
+.side .mode b { display: block; color: #f6d58a; }
+.side .mode.shared { border-style: solid; border-color: rgba(120, 200, 150, .35); }
+.side .mode.shared b { color: #8fdcb0; }
